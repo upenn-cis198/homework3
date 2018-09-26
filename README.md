@@ -144,6 +144,20 @@ Please do so at your discretion.
 ### Useful functions
 You may find `as_raw_fd()`, `read_to_string()`, `File::from_raw_fd()`, `File write_all()`, and str `as_bytes()` useful.
 
+### Unsafe
+One of the functions you have is marked as unsafe. Therefore you have to wrap it in a unsafe {... } block to use. Notice the
+unsafe block is like any other block in Rust, and values can be returned as expressions "up" a block.
+
+## Recommended Steps for Implementation.
+1) First implement the raw terminal functionality by using the raw terminal functions directly. That is, create a shell that
+is able to handle backspace, key presses, printing prompt, and when the user presses enter, it merely prints to the command
+like the command as a string.
+2) If #1 is working, then factor out your code into a RawTerminal type.
+3) Now add the functionality to actually execute the process using execvpe. At first, do not use pipes at
+all, this way, output will just be written to the terminal directly.
+4) Once you're able to call commands and have their output printed to the shell, work on getting '>' stdout redirection using
+pipes working. Everything else should work before you get here.
+
 ## Future Thoughts
 For the sake of simplicity, this is all. However, you should see how it is possible to extend the terminal functionality,
 in all sorts of ways: multiple command redirection using '|' pipes, to auto-completion of commands, color highlighting,
