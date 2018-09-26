@@ -14,22 +14,35 @@ with [termion](https://github.com/redox-os/termion) and [env_logger](https://doc
 ## Assignment
 We will be creating a simple shell in Rust. This shell should print a prompt, accept commands by the user, and when the user
 presses enter, execute those commands. The output will then be printed to the terminal. (The original assignment allowed the user
-to use either pipes `|` or stdout/stderr redirection for output, but that was too hard).
+to use pipes `|` for parallel output/input redirection among multiple processes, but that was too hard).
 
 A typical session in the shell may look like:
 ```bash
 > ls
-Cargo.lock  Cargo.toml	src  target
+Cargo.lock
+Cargo.toml
+src
+target
+
+> more cis198.txt
+more: stat of cis198.txt failed: No such file or directory
+
 > pwd
 /home/gatowololo/Programming/Rust/RustShellSimplified
-> echo "hello world"
-"hello world"
+
+> echo "hello class" > cis198.txt
+
+> more cis198.txt
+"hello class"
+
+> 
+> 
+> 
+> 
+> 
 > garbage
 ENOENT: No such file or directory
-> 
-> 
-> 
-> 
+
 > exit
 ```
 
@@ -44,8 +57,13 @@ before every line.
 If a command fails the run, the appropriate error should be printed to the terminal the the shell continued (as seen in the above
 example with the command "garbage").
 
+Your program should support stdout redirection if "> some_file.txt" is present. You can assume this command will always be well
+formed, so you can simple .split('>') to get both parts of the command. (Otherwise it's a pain to properly parse commands like
+this).
+
 ### Output
 The program can simply output the results of running a command directly to stdout/stderr.
+If the user specified *some_file* through output redirection, the results should go to that file instead.
 
 ## Design and implementation
 
@@ -120,5 +138,5 @@ Please do so at your discretion.
 
 ## Future Thoughts
 For the sake of simplicity, this is all. However, you should see how it is possible to extend the terminal functionality,
-in all sorts of ways: From output/input redirection using pipes, to auto-completion of commands, color highlighting,
+in all sorts of ways: multiple command redirection using '|' pipes, to auto-completion of commands, color highlighting,
 a command history, etc.
