@@ -54,16 +54,19 @@ the terminal, as well as `ctrl-c`.
 This program takes no command line arguments as input. Once it is running, it should clear the terminal, and print a prompt "> "
 before every line.
 
-If a command fails the run, the appropriate error should be printed to the terminal the the shell continued (as seen in the above
+If a command fails to run, the appropriate error should be printed to the terminal the the shell continued (as seen in the above
 example with the command "garbage").
 
-Your program should support stdout redirection if "> some_file.txt" is present. You can assume this command will always be well
-formed, so you can simple .split('>') to get both parts of the command. (Otherwise it's a pain to properly parse commands like
+Your program should support stdout redirection if `> some_file.txt` is present. You can assume this command will always be well
+formed, so you can simply .split('>') to get both parts of the command. (Otherwise it's a pain to properly parse commands like
 this).
+
+Any other input e.g. tab, alt+K, should simply be logged and ignored.
 
 ### Output
 The program can simply output the results of running a command directly to stdout/stderr.
-If the user specified *some_file* through output redirection, the results should go to that file instead.
+If the user specified *some_file* through stdout redirection, the results of stdout should go to that file instead.
+stderr can always be printed to the terminal.
 
 ## Design and implementation
 
@@ -111,7 +114,7 @@ terminal.write(&line);
 You may find this [termion blog](https://ticki.github.io/blog/making-terminal-applications-in-rust-with-termion/) useful for
 understanding how it all works.
 
-### env_log
+### env_log and Testing
 As you might have noticed from last assignment, testing code that interacts heavily with the OS can be trickle. Therefore, it is
 nice to have a logger which writes important events when debugging is enabled. `env_log` those this for us.
 
@@ -124,17 +127,22 @@ to log. Some examples might be: Which key has been pressed, what command the use
 It is okay, if the debug output is jumbled in and unaligned, as it is too tedious to get right, the simpler approach would be
 to simply write to a file, but we want to use env_logger for this assignment.
 
+Feel free to keep unit testing very light if at all.
+
 ### Nix
 Nix is a Rust crate wrapping libc with higher level, ergonomic code. Please use libc to interact spawn a separate process for
-execution of the command, specifically, use `fork`, `waitpid`, and `execvp` for running subcommands. **ERROR: DO NOT** use
+execution of the command, specifically, use `fork`, `waitpid`, and `execvp`, `pipe`, `close`, `dup2`, for running subcommands. **ERROR: DO NOT** use
 Struct std::process::Command.
 
-### Dealing with errors
-Propagating all errors up to main() quickly becomes intrusive to our function signatures and code. We should only trickly errors up
+### Dealing with errors 
+Propagating all errors up to main() quickly becomes intrusive to our function signatures and code. We should only trickle errors up
 when there is actually something we can do about it, or want to continue the program. Otherwise it is much easier to simply print
 out a helpful error message and exit the program.
 
 Please do so at your discretion.
+
+### Useful functions
+You may find `as_raw_fd()`, `read_to_string()`, `File::from_raw_fd()`, `File write_all()`, and str `as_bytes()` useful.
 
 ## Future Thoughts
 For the sake of simplicity, this is all. However, you should see how it is possible to extend the terminal functionality,
