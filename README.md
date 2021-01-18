@@ -1,3 +1,5 @@
+# Warning: This assignment is not yet updated for spring 2021 and may change substantially.
+
 # homework3
 A Rust Shell
 
