@@ -146,7 +146,7 @@ way.
 Now that you have the DFS functionality, implement a trait which works for
 a general graph-like collection:
 
-```
+```Rust
 trait Reachable {
     type T;
 
