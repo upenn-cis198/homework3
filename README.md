@@ -2,6 +2,10 @@
 
 Implementing Data Structures with Traits and Generics
 
+## Clippy and Rustfmt
+
+Reminder: please run `cargo clippy` and `cargo fmt` on all your code before submitting, and deal with all warnings (yellow text), not just errors (red text).
+
 ## Overview
 
 For this assignment, we will implement a graph data structure in Rust.
