@@ -221,4 +221,4 @@ types implementing that trait.
 
 ## Submission
 
-This assignment is submitted via GitHub classroom. The deadline is April 1, 2021 at 11:59pm Eastern.
+This assignment is submitted via GitHub classroom. The deadline is Monday, April 5, 2021 at 11:59pm Eastern.
