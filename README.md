@@ -58,17 +58,25 @@ To avoid worrying about difficult lifetime issues, I recommend that you use iden
 To do this, define new types: `struct VertexIden(usize)` and `struct EdgeIden(usize)`.
 Whenever a vertex or edge is added to your graph, first assign it a new label;
 then use that label internally to represent the vertex or edge.
-For example you could store the original labels in a `Vec`, but the actual graph
+For example you could store the original labels in a `Vec<Option<V>>` (`Option` to allow vertex removal), but the actual graph
 using HashMaps.
 The type wrappers ensure that you can't accidentally try to use a vertex as an edge or
 vice versa; you have to do `.0` to get the underlying `usize` value.
 
-You should make sure that most of your methods are efficient (`O(1)` insert and remove), but `merge_vertices` will necessarily be less efficient.
+Make sure that most of your methods are efficient (`O(1)` insert and remove), but `merge_vertices` will necessarily be less efficient.
 `HashMap` or a similar data structure is necessary for this.
+
+- **Edit:** Your graph will need ways to convert between identifiers and the original objects: so you need a way to go from `V` to `VertexIden` and from `VertexIden` to `V`. Instead of a `Vec` as mentioned above, you could use `HashMap<VertexIden, V>` and `HashMap<&V, VertexIden>`. Note that the latter has a reference to `V` as the HashMap key: to get this to work, you will need your Graph to have a lifetime, like `Graph<'a, V, E>`, and then you can have `HashMap<&'a V, VertexIden>`. Alternatively, if you want, you can do the assignment requiring `Clone` and use `Clone` when a vertex is added; in this case you can get away with `HashMap<VertexIden, V>` and `HashMap<V, VertexIden>`. See the other **Edit** below.
+Either way, I recommend starting out in your implementation by implementing the functions which go between identifiers and the original objects. So try to write your methods like
+`get_vertex_iden(&self, &V) -> VertexIden`
+and `get_vertex(&self, VertexIden) -> &V`.
+If you can get these two functions working (and the same thing for edges), then that should solidify the main design, and the rest of the assignment should go more smoothly.
 
 ### Standard Library Traits
 
 **Avoid unnecessary trait bounds.** Your `Graph` should not require any trait bounds on `V` and `E` by default. In particular, it should be usable even if `V` and `E` don't implement `Clone`.
+
+- **Edit:** Some clarification on this: you can require other bounds, like `Eq` and `Hash`. Additionally, if you want a slightly easier task, I am allowing you to require `V: Clone` and `E: Clone` if you prefer, but make sure that `.clone()` is only used sparingly. That is, you should only need to clone a vertex or edge when it is added to the graph, and not anywhere else.
 
 Please `#[derive(...)]` or implement `Clone`, `Debug`, `Display`, `Index`, and `IndexMut` for your graph. Although it should not require any trait bounds by default, your graph will require trait bounds in order to implement these traits: for example `Clone` won't be implemented unless `V` and `E` implement `Clone`.
 
@@ -221,4 +229,4 @@ types implementing that trait.
 
 ## Submission
 
-This assignment is submitted via GitHub classroom. The deadline is Monday, April 5, 2021 at 11:59pm Eastern.
+This assignment is submitted via GitHub classroom. The deadline is Wednesday, April 7, 2021 at 11:59pm Eastern. (**Edit:** updated deadline.)
